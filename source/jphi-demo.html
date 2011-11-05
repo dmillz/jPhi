@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /> <!-- from html5boilerplate -->
+	<title>jPhi Demo</title>
+	<meta name="author" content="David Mills" />	
+	<style type="text/css">
+		
+		body {		
+			margin: 0;
+			padding: 0;
+			font-family: 'Segoe UI', Calibri, Helvetica, Verdana, sans-serif;
+			text-align: center;
+			background-color: #1a2847;
+			color: #ececec;			
+		}
+		
+		a {
+			color: #0868ca;
+		}
+		
+		p {
+			padding: 0;
+			font-size: 3em
+		}
+		
+		html, body, #container 
+		{
+			width: 100%;
+			height: 100%;
+		}
+	
+		div {
+			border: 1px white solid;	
+		}
+	
+		.content
+		{
+			height: 100%;
+			width: 100%;
+		}
+	</style>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script type="text/javascript" src="jquery.phi.js"></script>
+</head>
+<body>
+
+	<div style="display: none">	
+		<div class="content">
+			Hello
+		</div>		
+		<div class="content">
+			World
+		</div>
+		<div class="content">
+			How
+		</div>
+		<div class="content">
+			Are
+		</div>
+		<div class="content">
+			You
+		</div>
+		<div class="content">
+			Tonight?
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+
+			$("body").phi($(".content"));
+
+		});
+        
+	</script>
+
+	
+	
+</body>
+</html>
