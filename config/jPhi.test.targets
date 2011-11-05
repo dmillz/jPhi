@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+MSBuild file for running our unit tests via JsTestDriver
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Import Project="environment.properties" />
+	
+	<Target Name="Test" DependsOnTargets="Build">
+		
+		<PropertyGroup>			
+			<JsTestDriverJar>tools\JsTestDriver-1.2.2.jar</JsTestDriverJar>
+			<JsTestDriverPort>9876</JsTestDriverPort>
+			<JsTestDriverConfig>config\jsTestDriver.conf</JsTestDriverConfig>
+			<JsTestDriverOutputPath>tests\test-results\</JsTestDriverOutputPath>
+		</PropertyGroup>
+		
+		<!-- create the test results output directory if it doesn't exist-->
+		<MakeDir Directories="$(JsTestDriverOutputPath)" Condition="!Exists('$(JsTestDriverOutputPath)')"/>
+		
+		<PropertyGroup>
+			<JsTestDriverCommand>$(JavaExePath) -jar $(JsTestDriverJar) --port $(JsTestDriverPort) --config $(JsTestDriverConfig) --browser @(BrowserPath, ',') --tests all --testOutput $(JsTestDriverOutputPath)</JsTestDriverCommand>
+		</PropertyGroup>
+		
+		<Message Text="Running JsTestDriver: $(JsTestDriverCommand)" />
+		
+		<Exec Command="$(JsTestDriverCommand)" />
+			
+	</Target>
+
+</Project>

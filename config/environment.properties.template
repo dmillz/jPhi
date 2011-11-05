@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+	Environment-specific paths & properties
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	
+	<PropertyGroup>
+		<JavaExePath>"C:\Program Files (x86)\Java\jre6\bin\java.exe"</JavaExePath>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<!-- list paths to as many browsers as you want to test -->
+		<BrowserPath Include='"C:\Program Files (x86)\Mozilla Firefox\firefox.exe"' />
+		<BrowserPath Include='"C:\Program Files (x86)\Internet Explorer\iexplore.exe"' />
+		<BrowserPath Include='"C:\Users\[your username]\AppData\Local\Google\Chrome\Application\chrome.exe"' />
+		<BrowserPath Include='"C:\Program Files (x86)\Opera\opera.exe"' />
+		<BrowserPath Include='"C:\Program Files (x86)\Safari\safari.exe"' />
+		<BrowserPath Include='"c:\path\to\IE7.exe"' />		
+		<BrowserPath Include='"c:\path\to\IE6.exe"' />		
+	</ItemGroup>	
+
+</Project>

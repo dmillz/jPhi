@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MSBuildContrib.Utilities</name>
+    </assembly>
+    <members>
+        <member name="T:MSBuildContrib.Utilities.FileHelpers">
+            <summary>
+            Groups a set of useful file related helper methods.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.FileHelpers.IsDirectory(System.String)">
+            <summary>
+            Indicates if the specified path is a directory or a file.
+            </summary>
+            <param name="path"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.FileHelpers.SetReadOnly(System.String,System.Boolean)">
+            <summary>
+            Sets or clears the read-only attribute on the specified file.
+            </summary>
+            <param name="path">The path to the file.</param>
+            <param name="makeReadOnly">Set or clear the read-only attribute.</param>
+        </member>
+        <member name="T:MSBuildContrib.Utilities.Helpers">
+            <summary>
+            Groups a set of useful helper methods.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.Helpers.InvariantToString(System.Int32)">
+            <summary>
+            Converts the numeric value of this instance to it's equivalent
+            string representation using the Invariant Culture.
+            </summary>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MSBuildContrib.Utilities.PathHelpers">
+            <summary>
+            Groups a set of useful path related helper methods.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.PathHelpers.CombinePaths(System.String[])">
+            <summary>
+            Combines multiple path strings.
+            </summary>
+            <param name="paths">The array of strings to combine.</param>
+            <returns>A string containing the combined paths. If one of the specified paths is a zero-length string,
+            this method returns the other path.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.PathHelpers.RelativePathTo(System.String,System.String)">
+            <summary>
+            Creates a relative path from one file or folder to another.
+            </summary>
+            <param name="fromDirectory">Contains the directory that defines the start of the relative path.</param>
+            <param name="toPath">Contains the path that defines the endpoint of the relative path.</param>
+            <returns>The relative path from the start directory to the end path.</returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="T:MSBuildContrib.Utilities.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Utilities.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Utilities.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Utilities.Properties.Resources.Argument_StringZeroLength">
+            <summary>
+              Looks up a localized string similar to String cannot be of zero length..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Utilities.Properties.Resources.ToolFound">
+            <summary>
+              Looks up a localized string similar to {0} found at &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Utilities.Properties.Resources.ToolNotFound">
+            <summary>
+              Looks up a localized string similar to {0} was not found..
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Utilities.ToolHelpers">
+            <summary>
+            Groups a set of useful helper methods for different command line tools.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindFxCop(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if FxCop is installed.
+            </summary>
+            <param name="toolPath">The installation folder for FxCop.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if FxCop is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindHtmlHelpWorkshop(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if the HTML Help Workshop is installed.
+            </summary>
+            <param name="toolPath">The installation folder for the HTML Help Workshop.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if the HTML Help Workshop is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindNDoc(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if NDoc is installed.
+            </summary>
+            <param name="toolPath">The installation folder for NDoc.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if NDoc is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindNUnit(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if NUnit is installed.
+            </summary>
+            <param name="toolPath">The installation folder for NUnit.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if NUnit is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindSandcastle(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if Microsoft Sandcastle is installed.
+            </summary>
+            <param name="toolPath">The installation folder for Microsoft Sandcastle.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if Microsoft Sandcastle is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindSandcastleHelpFileBuilder(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if Sandcastle Help File Builder is installed.
+            </summary>
+            <param name="toolPath">The installation folder for Sandcastle Help File Builder.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if Sandcastle Help File Builder is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindVisualBasic(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if Microsoft Visual Basic is installed.
+            </summary>
+            <param name="toolPath">The installation folder for Microsoft Visual Basic.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if Microsoft Visual Basic is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindVisualStudio2003(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if Microsoft Visual Studio 2003 is installed.
+            </summary>
+            <param name="toolPath">The installation folder for Microsoft Visual Studio 2003.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if Microsoft Visual Studio 2003 is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindVisualStudio2005(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if Microsoft Visual Studio 2005 is installed.
+            </summary>
+            <param name="toolPath">The installation folder for Microsoft Visual Studio 2005.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if Microsoft Visual Studio 2005 is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindVisualStudio2008(Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if Microsoft Visual Studio 2008 is installed.
+            </summary>
+            <param name="toolPath">The installation folder for Microsoft Visual Studio 2008.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if Microsoft Visual Studio 2008 is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Utilities.ToolHelpers.FindVisualStudioTool(System.String,Microsoft.Build.Framework.ITaskItem@,Microsoft.Build.Utilities.TaskLoggingHelper)">
+            <summary>
+            Determines if the specified Visual Studio tool is installed.
+            </summary>
+            <param name="toolName">The name of the command line tool.</param>
+            <param name="toolPath">The installation folder for the tool.</param>
+            <param name="log">The logger used by the calling task.</param>
+            <returns><see langword="true"/> if the tool is installed; otherwise <see langword="false"/>.</returns>
+        </member>
+    </members>
+</doc>

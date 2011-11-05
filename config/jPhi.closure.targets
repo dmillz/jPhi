@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+MSBuild file for running our javascript through the Closure Compiler in order to generate warnings and errors
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<CC2VSExe>$(MSBuildProjectDirectory)\tools\cc2vs-20100606\cc2vs.exe</CC2VSExe>
+	</PropertyGroup>
+	
+	<Target Name="ClosureErrors">
+		
+		<PropertyGroup>
+			<ErrorsCommand>"$(CC2VSExe)" --input-dir "$(SourceDirectory)"</ErrorsCommand>
+		</PropertyGroup>
+		
+		<Exec Command="$(ErrorsCommand)" />
+			
+	</Target>
+	
+	<Target Name="ClosureCompile">
+		
+		<PropertyGroup>
+			<CompileCommand>"$(CC2VSExe)" --input-dir "$(SourceDirectory)" --ccarg-compilation_level SIMPLE_OPTIMIZATIONS --compiled-js-ouput-path "$(MinifiedOutputFile)"</CompileCommand>
+		</PropertyGroup>
+		
+		<Exec Command="$(CompileCommand)" />
+			
+	</Target>
+
+
+
+</Project>

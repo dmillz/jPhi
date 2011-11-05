@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+MSBuild file for running our javascript through the JSLint code quality tool
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<SedodreamDirectory>..\tools\Sedodream.MSBuild.CustomBuildWithBugfix</SedodreamDirectory>
+	</PropertyGroup>
+
+	<UsingTask
+        TaskName="JSLint"
+        AssemblyFile="$(SedodreamDirectory)\Sedodream.MSBuild.Tasks.dll" />
+		
+	<Target Name="JSLint">
+		
+		<JSLint ScriptFiles="@(JavaScriptFiles)" 
+				TreatErrorsAsWarnings="false"
+				browser="true"		
+				debug="false"
+				UseGoodpartsOptions="false" 		
+				UseRecommendedOptions="false"
+            />
+			
+	</Target>
+
+</Project>

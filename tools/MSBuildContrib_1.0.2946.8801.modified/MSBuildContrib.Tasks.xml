@@ -1,0 +1,1640 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MSBuildContrib.Tasks</name>
+    </assembly>
+    <members>
+        <member name="T:MSBuildContrib.Tasks.GacUtil">
+            <summary>
+            Install or uninstall assemblies into the GAC.
+            </summary>
+            <example>
+            <para>Install a DLL into the GAC.</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <Assemblies Include="MSBuildContrib.Common.Tasks.dll" />
+            </ItemGroup>
+            <GacUtil Command="Install" Assemblies="@(Assemblies)" Force="true" />
+                ]]>
+              </code>
+            </example>
+            <example>
+            <para>Uninstall a DLL into the GAC.</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <Assemblies Include="MSBuildContrib.Common.Tasks.dll" />
+            </ItemGroup>
+            <GacUtil Command="Uninstall" Assemblies="@(Assemblies)" Force="true" />
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.GacUtil.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.GacUtil"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.GacUtil.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.GacUtil.GenerateCommandLineCommands">
+            <summary>
+            Returns a string value containing the command line arguments to pass directly to the executable file.
+            </summary>
+            <returns>A string value containing the command line arguments to pass directly to the executable file.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.GacUtil.GenerateFullPathToTool">
+            <summary>
+            Returns the fully qualified path to the executable file.
+            </summary>
+            <returns>The fully qualified path to the executable file.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.GacUtil.LogToolCommand(System.String)">
+            <summary>
+            Logs the starting point of the run to all registered loggers.
+            </summary>
+            <param name="message">A descriptive message to provide loggers, usually the command line and switches.</param>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GacUtil.Assemblies">
+            <summary>
+            The list of assemblies to install or uninstall.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GacUtil.Command">
+            <summary>
+            Gets or sets the command.
+            </summary>
+            <value>One of the <see cref="T:MSBuildContrib.Common.GacUtilCommands"/> values.</value>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GacUtil.Force">
+            <summary>
+            Gets or sets a value indicating whether to force reinstall of an assembly.
+            </summary>
+            <value><see langword="true"/> if force; otherwise, <see langword="false"/>.</value>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GacUtil.TargetFramework">
+            <summary>
+            The .NET Framework version of the GAC.
+            </summary>
+            <value>A string representing one of the <see cref="T:Microsoft.Build.Utilities.TargetDotNetFrameworkVersion"/> values.</value>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GacUtil.ToolName">
+            <summary>
+            Gets the name of the executable file to run.
+            </summary>
+            <value>The name of the executable file to run.</value>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Properties.TaskMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Attrib_Comment">
+            <summary>
+              Looks up a localized string similar to Attributes for &quot;{1}&quot; changed to [{0}]..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Attrib_Error">
+            <summary>
+              Looks up a localized string similar to MSBC3001: Unable to change attributes for file &quot;{0}&quot;. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CheckDiskspace_DriveNotReadyError">
+            <summary>
+              Looks up a localized string similar to MSBC3261: Drive {0} is not ready..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CheckDiskspace_LowDiskspaceCriticalMesssage">
+            <summary>
+              Looks up a localized string similar to MSBC3263: Drive {0} is running critically low on disk space. The available disk space is {1:D}GB..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CheckDiskspace_LowDiskspaceMesssage">
+            <summary>
+              Looks up a localized string similar to MSBC3262: Drive {0} is running low on disk space. The available disk space is {1:D}GB..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CheckDiskspace_Message">
+            <summary>
+              Looks up a localized string similar to {0} Free Bytes Available: {1:D}GB, Total Number Of Bytes: {2:D}GB, Total Number Of FreeBytes: {3:D}GB..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Checksum_Error">
+            <summary>
+              Looks up a localized string similar to MSBC3011: Unable to calculate checksum for file &quot;{0}&quot;. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CodeStats_Error">
+            <summary>
+              Looks up a localized string similar to MSBC3021: Failed to generate code statistics. {0}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CodeStats_FileInfo">
+            <summary>
+              Looks up a localized string similar to Totals:  [{0}] [T] {1} [C] {2} [E] {3}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CodeStats_Summary">
+            <summary>
+              Looks up a localized string similar to {0} Totals:  [T] {1} [C] {2}  [E] {3}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CommandLineSwitchError">
+            <summary>
+              Looks up a localized string similar to Invalid settings passed to CodeAnalysis task. See output window for details..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Concat_Error">
+            <summary>
+              Looks up a localized string similar to MSBC3031: Unable to concatenate file &quot;{0}&quot; to &quot;{1}&quot;. {2}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Concat_FailedToCreateOutputFile">
+            <summary>
+              Looks up a localized string similar to MSBC3032: Unable to create output file &quot;{0}&quot;. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CreateItemRegex_InvalidPattern">
+            <summary>
+              Looks up a localized string similar to MSBC3041: Invalid value &quot;{0}&quot; for &quot;pattern&quot; attribute..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CreateItemRegex_Message">
+            <summary>
+              Looks up a localized string similar to Setting metadata item &apos;{0}&apos; to &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.CreateItemRegex_NoMatchFound">
+            <summary>
+              Looks up a localized string similar to MSBC3042: No match found for expression &apos;{0}&apos; in &apos;{1}&apos;. {2}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.FileNotFound">
+            <summary>
+              Looks up a localized string similar to File {0} was not found. Skipping this file..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.FxCop_AnalysisComplete">
+            <summary>
+              Looks up a localized string similar to Code Analysis Complete -- {0} error(s), {1} warning(s).
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.FxCop_FailedReadingReport">
+            <summary>
+              Looks up a localized string similar to Unable to read output report: {0}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.FxCop_FailedToLocate">
+            <summary>
+              Looks up a localized string similar to MSBC3051: Unable to locate Microsoft FxCop to perform Code Analysis on managed binaries..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.FxCop_OutputError">
+            <summary>
+              Looks up a localized string similar to Unable to read Code Analysis output report. Make sure that the directory is writable (default is the project output directory)..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.FxCop_PerformingCodeAnalysis">
+            <summary>
+              Looks up a localized string similar to Running Code Analysis....
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.FxCop_RuleError">
+            <summary>
+              Looks up a localized string similar to {0} : Rule={1}#{2}, Target={3} : {4}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.FxCop_UnknownError">
+            <summary>
+              Looks up a localized string similar to An unknown error occurred running Code Analysis. Please contact Microsoft Product Support Services..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.GacUtil_BadImage">
+            <summary>
+              Looks up a localized string similar to MSBC3064: Cannot unregister assembly &quot;{0}&quot; - not a valid image. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.GacUtil_Error">
+            <summary>
+              Looks up a localized string similar to MSBC3065: Cannot {0} assembly &quot;{1}&quot;. {2}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.GacUtil_GeneralError">
+            <summary>
+              Looks up a localized string similar to MSBC3065: Cannot {0} assemblies. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.GacUtil_GeneralIoException">
+            <summary>
+              Looks up a localized string similar to MSBC3063: Could not load assembly &quot;{0}&quot;. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.GacUtil_UnregisterAsmFailedToLoadAssembly">
+            <summary>
+              Looks up a localized string similar to MSBC3062: Cannot unregister assembly &quot;{0}&quot; - cannot load file. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.GacUtil_UnregisterAsmFileDoesNotExist">
+            <summary>
+              Looks up a localized string similar to MSBC3061: Cannot unregister assembly &quot;{0}&quot; - file doesn&apos;t exist. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.General_FailedCreatingTempFile">
+            <summary>
+              Looks up a localized string similar to MSBC3997: Failed to create temporary file. {0}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.General_FailedCreatingTempFileNamed">
+            <summary>
+              Looks up a localized string similar to MSBC3996: Failed to create temporary file &apos;{0}&apos;. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.General_FailedDeletingTempFile">
+            <summary>
+              Looks up a localized string similar to MSBC3998: Failed to delete temporary file &apos;{0}&apos;. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.General_TextFilesNotSupportedExcpetion">
+            <summary>
+              Looks up a localized string similar to MSBC3995:General text files are not supported. ({0}).
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.General_TwoVectorsMustHaveSameLength">
+            <summary>
+              Looks up a localized string similar to MSBC3994: &quot;{2}&quot; refers to {0} item(s), and &quot;{3}&quot; refers to {1} item(s). They must have the same number of items..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.GetEnvironment_Error">
+            <summary>
+              Looks up a localized string similar to MSBC3071: Unable to retrieve environment information. {0}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Grep_Error">
+            <summary>
+              Looks up a localized string similar to MSBC3081: Unable to search files. {0}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Grep_OutputFile">
+            <summary>
+              Looks up a localized string similar to Writing matches to &apos;{0}&apos;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Help_FxCop_FailedToLocate">
+            <summary>
+              Looks up a localized string similar to For more information on FxCop, including where to download the latest version, please go to http://blogs.msdn.com/fxcop/..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_CreatesDirectory">
+            <summary>
+              Looks up a localized string similar to Creating directory &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_DestinationIsDirectory">
+            <summary>
+              Looks up a localized string similar to MSBC3114: Could not move the file &quot;{0}&quot; to the destination file &quot;{1}&quot;, because the destination is a folder instead of a file. To move the source file into a folder, consider using the DestinationFolder parameter instead of DestinationFiles..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_DidNotMoveBecauseOfFileMatch">
+            <summary>
+              Looks up a localized string similar to Did not move from file &quot;{0}&quot; to file &quot;{1}&quot; because the &quot;{2}&quot; parameter was set to &quot;{3}&quot; in the project and the files&apos; sizes and timestamps match..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_Error">
+            <summary>
+              Looks up a localized string similar to MSBC3111: Unable to move file &quot;{0}&quot; to &quot;{1}&quot;. {2}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_ExactlyOneTypeOfDestination">
+            <summary>
+              Looks up a localized string similar to MSBC3112: Both &quot;{0}&quot; and &quot;{1}&quot; were specified as input parameters in the project file. Please choose one or the other..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_FileComment">
+            <summary>
+              Looks up a localized string similar to Moving file from &quot;{0}&quot; to &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_NeedsDestination">
+            <summary>
+              Looks up a localized string similar to MSBC3113: No destination specified for Move. Please supply either &quot;{0}&quot; or &quot;{1}&quot;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_RemovingExistingFile">
+            <summary>
+              Looks up a localized string similar to Removing existing file &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_RemovingReadOnlyAttribute">
+            <summary>
+              Looks up a localized string similar to Removing read-only attribute from &quot;{0}&quot;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.TaskMessages.Move_SourceIsDirectory">
+            <summary>
+              Looks up a localized string similar to MSBC3115: The source file &quot;{0}&quot; is actually a directory.  The &quot;Move&quot; task does not support copying directories..
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Pattern">
+            <summary>
+            Encapsulation of a search pattern.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Pattern.ConcatenateCaptures(System.Text.RegularExpressions.Group)">
+            <summary>
+            Concatenates the captures of <paramref name="group"/> to a string.
+            </summary>
+            <param name="group"><see cref="T:System.Text.RegularExpressions.Group"/> containing the captures.</param>
+            <returns>
+            <see cref="T:System.String"/> containg the concatenated captures.
+            </returns>
+            <remarks>
+            A named-group can captured multiple times, when the regular
+            expression has a quantifier, e.g. (// (?'Text'.*) )* will match
+            multiline comments with group <i>Text</i> having a capture for
+            every line.
+            </remarks>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Pattern.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.Pattern"/> class from 
+            a regular-expression.
+            </summary>
+            <param name="regex">The regular-expression.</param>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Pattern.Extract(System.String,System.String)">
+            <summary>
+            Extracts the matches of this pattern from <paramref name="source" />.
+            </summary>
+            <param name="fileName">The name of the file associated with <paramref name="source" />.</param>
+            <param name="source">The source string</param>
+            <returns>
+            A collection of found matches.
+            </returns>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.CreateItemRegex">
+            <summary>
+            Creates an item based on the evaluation of a regular expression. The named groups
+            in the regular expression are created as item metadata.
+            </summary>
+            <remarks>
+            <para>
+            The <see cref="P:MSBuildContrib.Tasks.CreateItemRegex.Pattern"/> attribute must contain one or more 
+            <see href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpcongroupingconstructs.asp">
+            named grouping constructs</see>, which represents the names of the 
+            properties to be set. These named grouping constructs can be enclosed 
+            by angle brackets (?&lt;name&gt;) or single quotes (?'name').
+            </para>
+            <note>
+            In the build file, use the XML element <![CDATA[&lt;]]> to specify &lt;, 
+            and <![CDATA[&gt;]]> to specify &gt;.
+            </note>
+            <note>
+            The named grouping construct must not contain any punctuation and it 
+            cannot begin with a number.
+            </note>
+            </remarks>
+            <example>
+              <para>
+              Find the last word in the given string and stores it in the property 
+              <c>lastword</c>.
+              </para>
+              <code>
+                <![CDATA[
+            <CreateItemRegex Pattern="(?'lastword'\w+)$" Input="This is a test sentence">
+               <Output TaskParameter="Item" ItemName="lastword" />
+            </CreateItemRegex>
+            <Message Text="@(lastword)"/>
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>
+              Split the full filename and extension of a filename.
+              </para>
+              <code>
+                <![CDATA[
+            <CreateItemRegex Pattern="^(?'name'.*)\.(?'ext'\w+)$" Input="d:\Temp\SomeDir\SomeDir\bla.xml">
+               <Output TaskParameter="Item" ItemName="RegexProperties" />
+            </CreateItemRegex>
+            <Message Text="%(RegexProperties.name)"/>
+            <Message Text="%(RegexProperties.ext)"/>
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>
+              Split the path and the filename. (This checks for <c>/</c> or <c>\</c> 
+              as the path separator).
+              </para>
+              <code>
+                <![CDATA[
+            <CreateItemRegex Pattern="^(?'path'.*(\\|/)|(/|\\))(?'file'.*)$" Input="d:\Temp\SomeDir\SomeDir\bla.xml">
+               <Output TaskParameter="Item" ItemName="RegexProperties" />
+            </CreateItemRegex>
+            <Message Text="%(RegexProperties.path)"/>
+            <Message Text="%(RegexProperties.file)"/>
+                ]]>
+              </code>
+              <para>
+              Results in path=<c>d:\Temp\SomeDir\SomeDir\</c> and file=<c>bla.xml</c>.
+              </para>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.CreateItemRegex.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.CreateItemRegex"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.CreateItemRegex.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CreateItemRegex.Input">
+            <summary>
+            The input for the regular expression.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CreateItemRegex.Item">
+            <summary>
+            The item that contains the resulting metadata from
+            the regular expression.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CreateItemRegex.Options">
+            <summary>
+            A comma separated list of options to pass to the regex engine. The
+            default is <see cref="F:System.Text.RegularExpressions.RegexOptions.None"/>.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CreateItemRegex.Pattern">
+            <summary>
+            The regular expression to be evalued.
+            </summary>
+            <remarks>
+            The pattern must contain one or more named constructs, which may 
+            not contain any punctuation and cannot begin with a number.
+            </remarks>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Concat">
+            <summary>
+            Concatenates a set of files.
+            </summary>
+            <remarks>
+            <para>
+            This task takes a set of input files in a fileset
+            and concatenates them into a single file. You can 
+            either replace the output file, or append to it 
+            by using the append attribute.
+            </para>
+            <para>
+            The order the files are concatenated in is not
+            especified.
+            </para>
+            </remarks>
+            <example>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <ChecksumFiles Include="**\*.txt" />
+            </ItemGroup>
+            <Concat InputFiles="@(CodeStatsItems)" Destination="Full.txt" Append="true" />
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Concat.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.Concat"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Concat.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Concat.Append">
+            <summary>
+            Name of Algorithm to use when calculating
+            the Concat. Can be MD5 or SHA1.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Concat.Destination">
+            <summary>
+            Name of the destination file.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Concat.InputFiles">
+            <summary>
+            The set of files to concatenate.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Concat.OutputEncoding">
+            <summary>
+            Value describing the encoding method for the 
+            output file. Corresponds with values in System.Text.Encoding.
+            If not set, UTF-8 will be used.
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Attrib">
+            <summary>
+            Changes the attributes of files and/or directories.
+            </summary>
+            <example>
+              <para>Make file Readonly, Hidden and System.</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <Attrib InputFiles="file1.txt" ReadOnly="true" Hidden="true" System="true" />
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>Clear Hidden and System.</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <Attrib InputFiles="file1.txt" Hidden="false" System="false" />
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Attrib.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.Attrib"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Attrib.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Attrib.Archive">
+            <summary>
+            Set the archive attribute. The default is <see langword="false" />.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Attrib.ChangedFiles">
+            <summary>
+            The files changed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Attrib.Encrypted">
+            <summary>
+            Set the encrypted attribute. The default is <see langword="false" />.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Attrib.Hidden">
+            <summary>
+            Set the hidden attribute. The default is <see langword="false" />.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Attrib.InputFiles">
+            <summary>
+            The set of files to change attributes.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Attrib.Normal">
+            <summary>
+            Set the normal attribute. The default is <see langword="false" />.
+            </summary>
+            <remarks>This attribute is only valid if used alone.</remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Attrib.ReadOnly">
+            <summary>
+            Set the read-only attribute. The default is <see langword="false" />.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Attrib.System">
+            <summary>
+            Set the system attribute. The default is <see langword="false" />.
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Move">
+            <summary>
+            Moves files on the filesystem to a new location.
+            </summary>
+            <remarks>
+            Either the <see cref="P:MSBuildContrib.Tasks.Move.DestinationFolder"/> or the 
+            <see cref="P:MSBuildContrib.Tasks.Move.DestinationFiles"/> parameter must be specified, but not 
+            both. If both are specified, the task fails and an error is logged.
+            </remarks>
+            <example>
+            <para>The following example moves the items in the MySourceFiles item
+            collection into the folder c:\MyProject\Destination.</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <MySourceFiles Include="a.cs;b.cs;c.cs" />
+            </ItemGroup>
+            <Move SourceFiles="@(MySourceFiles)" DestinationFolder="c:\MyProject\Destination" />
+                ]]>
+              </code>
+            </example>
+            <example>
+            <para>The following example renames a file</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <Move SourceFiles="a.cs" DestinationFiles="b.cs" />
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Move.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.Move"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Move.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Move.DestinationFiles">
+            <summary>
+            Specifies the list of files to copy the source files to. This list
+            is expected to be a one-to-one mapping with the list specified in
+            the <see cref="P:MSBuildContrib.Tasks.Move.SourceFiles"/> parameter. That is, the first file
+            specified in <see cref="P:MSBuildContrib.Tasks.Move.SourceFiles"/> will be copied to the first
+            location specified in <see cref="P:MSBuildContrib.Tasks.Move.DestinationFiles"/>, and so forth.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Move.DestinationFolder">
+            <summary>
+            Specifies the directory to which you want to copy the files. This must be a directory, not a file. If the directory does not exist, it is created automatically. 
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Move.MovedFiles">
+            <summary>
+            Contains the items that were successfully moved.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Move.OverwriteExistingFiles">
+            <summary>
+            Overwrite files even if they already exist.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Move.OverwriteReadOnlyFiles">
+            <summary>
+            Overwrite files even if they are marked as read only files.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Move.SkipUnchangedFiles">
+            <summary>
+            If <see langword="true"/>, skips the moving of files that are 
+            unchanged between the source and destination. The 
+            <see cref="T:MSBuildContrib.Tasks.Move"/> task considers files to be unchanged if they
+            have the same size and the same last modified time.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Move.SourceFiles">
+            <summary>
+            Specifies the files to move.
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.CheckDiskspace">
+            <summary>
+            Reports any local fixed disks that are less than the minimum available
+            space.
+            </summary>
+            <example>
+            <para>Reports any disks that are less than 3GB (default size).</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <CheckDiskspace />
+                ]]>
+              </code>
+            </example>
+            <example>
+            <para>Reports any disks that are less than 5GB.</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <CheckDiskspace MinimumDiskspace="5368709120" />
+                ]]>
+              </code>
+            </example>
+            <remarks>When any disk falls below 1GB, an error is reported.</remarks>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.CheckDiskspace.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.CheckDiskspace"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.CheckDiskspace.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CheckDiskspace.MinimumDiskspace">
+            <summary>
+            The minimum amount of disk space (in bytes) available before a warning is issued.
+            </summary>
+            <remarks>The default is 3GB.</remarks>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.FailedCreatingTempFile">
+            <summary>
+              Looks up a localized string similar to Failed to create a temporary file. Temporary files folder is full or its path is wrong. {0}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.FailedCreatingTempFileNamed">
+            <summary>
+              Looks up a localized string similar to Failed to create temporary file &apos;{0}&apos;. {0}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.FailedDeletingTempFile">
+            <summary>
+              Looks up a localized string similar to Failed to delete temporary file &apos;{0}&apos;. {1}.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.FileNotFound">
+            <summary>
+              Looks up a localized string similar to File {0} was not found. Skipping this file..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.GeneralTextFilesNotSupportedExcpetion">
+            <summary>
+              Looks up a localized string similar to General text files are not supported. ({0}).
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.InvalidEnumValue">
+            <summary>
+              Looks up a localized string similar to The value &apos;{0}&apos; is not in valid..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.ToolFound">
+            <summary>
+              Looks up a localized string similar to {0} found at &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Properties.Resources.ToolNotFound">
+            <summary>
+              Looks up a localized string similar to {0} was not found..
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.GetEnvironment">
+            <summary>
+            Retrieves information about the execution environment.
+            </summary>
+            <example>
+              <code lang="MSBuild">
+                <![CDATA[
+            <GetEnvironment>
+               <Output TaskParameter="OSVersion" PropertyName="OSVersion" />
+               <Output TaskParameter="ProcessorCount" PropertyName="ProcessorCount" />
+               <Output TaskParameter="UserInteractive" PropertyName="UserInteractive" />
+               <Output TaskParameter="LogicalDrives" PropertyName="LogicalDrives" />
+            </GetEnvironment>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.GetEnvironment.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.GetEnvironment"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.GetEnvironment.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.ApplicationDataDirectory">
+            <summary>
+            The directory that serves as a common repository for application-specific data for the current roaming user.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.CommonApplicationDataDirectory">
+            <summary>
+            The directory that serves as a common repository for application-specific data that is used by all users.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.CommonProgramFilesDirectory">
+            <summary>
+            The directory for components that are shared across applications.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.CurrentDirectory">
+            <summary>
+            The current working directory.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.DesktopDirectory">
+            <summary>
+            The directory used to physically store file objects on the desktop.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.FxCopPath">
+            <summary>
+            The install directory for Microsoft FxCop.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.HtmlHelpWorkshopPath">
+            <summary>
+            The install directory for the HTML Help Workshop.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsFxCopInstalled">
+            <summary>
+            Indicates if Microsoft FxCop is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsHtmlHelpWorkshopInstalled">
+            <summary>
+            Indicates if the HTML Help Workshop is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsNDocInstalled">
+            <summary>
+            Indicates if NDoc is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsNUnitInstalled">
+            <summary>
+            Indicates if NUnit is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsSandcastleHelpFileBuilderInstalled">
+            <summary>
+            Indicates if the Sandcastle Help File Builder is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsSandcastleInstalled">
+            <summary>
+            Indicates if Sandcastle is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsVisualBasicInstalled">
+            <summary>
+            Indicates if Visual Basic 6.0 is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsVisualStudio2003Installed">
+            <summary>
+            Indicates if Visual Studio 2003 is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsVisualStudio2005Installed">
+            <summary>
+            Indicates if Visual Studio 2005 is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.IsVisualStudio2008Installed">
+            <summary>
+            Indicates if Visual Studio 2008 is installed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.LogicalDrives">
+            <summary>
+            Returns the names of the logical drives on the current computer.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.NDocPath">
+            <summary>
+            The install directory for NDoc.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.NUnitPath">
+            <summary>
+            The install directory for NUnit.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.OSVersion">
+            <summary>
+            The current platform identifier and version number.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.ProcessorCount">
+            <summary>
+            The number of processors on the current machine.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.ProgramFilesDirectory">
+            <summary>
+            The program files directory.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.SandcastleHelpFileBuilderPath">
+            <summary>
+            The install directory for the Sandcastle Help File Builder.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.SandcastlePath">
+            <summary>
+            The install directory for Sandcastle.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.SystemDirectory">
+            <summary>
+            The System directory.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.TempDirectory">
+            <summary>
+            The current system's temporary folder.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.UserInteractive">
+            <summary>
+            Indicates if the current processor is running in user interactive mode.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.VisualBasicPath">
+            <summary>
+            The install directory for Visual Basic 6.0.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.VisualStudio2003Path">
+            <summary>
+            The install directory for Visual Studio 2003.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.VisualStudio2005Path">
+            <summary>
+            The install directory for Visual Studio 2005.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.GetEnvironment.VisualStudio2008Path">
+            <summary>
+            The install directory for Visual Studio 2008.
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.LineCounter">
+            <summary>
+            This purpose of this class is to get the line-numbers within 
+            a string for a specific position of a character 
+            (an index, as returned by the <see cref="T:System.Text.RegularExpressions.Regex"/> class).
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.LineCounter.Count(System.String,System.Char,System.Int32,System.Int32)">
+            <summary>
+            Counts the number of occurences of <paramref name="c"/> in the 
+            range from <paramref name="start"/> to <paramref name="end"/> in 
+            string <paramref name="str"/>.
+            </summary>
+            <param name="str"><see cref="T:System.String"/> to count in.</param>
+            <param name="c">Character to count.</param>
+            <param name="start">Start of range.</param>
+            <param name="end">End of range.</param>
+            <returns>
+            The number of occurences of <paramref name="c"/> in the range from 
+            <paramref name="start"/> to <paramref name="end"/> in string 
+            <paramref name="str"/>.
+            </returns>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.LineCounter.#ctor(System.String)">
+            <summary>
+            Constructs a line-counter for a <see cref="T:System.String"/>.
+            </summary>
+            <param name="line"><see cref="T:System.String"/> for which lines are counted.</param>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.LineCounter.CountTo(System.Int32)">
+            <summary>
+            Counts the line-numbers until the position <paramref name="pos" />
+            is reached.
+            </summary>
+            <param name="pos">Index into the string given during construction </param>
+            <returns>
+            The number of lines.
+            </returns>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Grep">
+            <summary>
+            Searches files for a regular-expression and produces an XML report of 
+            the matches.
+            </summary>
+            <example>
+                <para>
+                    Extract all <i>TODO:</i>, <i>UNDONE:</i> or <i>HACK:</i>-
+                    comment-tags from C# source files and write them to a file
+                    <i>out.xml</i>. (An xslt-stylesheet could then transform it to
+                    a nice html-page for your project-homepage, but that is beyond
+                    the scope of this example.) 
+                </para>
+                <para>
+                    <i>Path</i>, <i>File</i> and <i>LineNumber</i> are automatically
+                    generated elements.
+                </para>
+                <code lang="MSBuild">
+                    <![CDATA[
+            <ItemGroup>
+               <CommentScrubItems Include="**\*.cs" />
+            </ItemGroup>
+            <Grep InputFiles="@(CommentScrubItems)" OutputFile="out.xml" Pattern="// (?'Type'TODO|UNDONE|HACK): (\[(?'Author'\w*),(?'Date'.*)\])? (?'Text'[^\n\r]*)"  />
+                    ]]>
+                </code>
+                <para>
+                    The resulting XML file for a comment-tag  
+                    'TODO: [md, 14-02-2004] comment this method'
+                    will look like
+                </para>
+                <code lang="MSBuild">
+                    <![CDATA[
+            <?xml version="1.0" encoding="utf-8" ?> 
+            <Matches>
+                <Match>
+                    <Type>TODO</Type> 
+                    <Text>comment this method</Text> 
+                    <Path>C:\MyProjects\MyPath</Path>
+                    <File>MyFile.cs</Filename> 
+                    <LineNumber>146</LineNumber> 
+                    <Author>md</Author>
+                    <Date>14-02-2004</Date>
+                </Match>
+                ...
+            </Matches>
+                    ]]>
+                </code> 
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Grep.WriteMatches(MSBuildContrib.Tasks.MatchCollection)">
+            <summary>
+            Writes the specified matches to <see cref="P:MSBuildContrib.Tasks.Grep.OutputFile"/>.
+            </summary>
+            <param name="matches">The collection of matches to write.</param>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Grep.WriteXml(MSBuildContrib.Tasks.MatchCollection,System.IO.StreamWriter)">
+            <summary>
+            Writes the collection of matches to the specified <see cref="T:System.IO.StreamWriter"/>
+            in XML format.
+            </summary>
+            <param name="matches">The matches to write.</param>
+            <param name="writer"><see cref="T:System.IO.StreamWriter"/> to write the matches to.</param>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Grep.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.Grep"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Grep.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Grep.InputFiles">
+            <summary>
+            The set of files in which the expression is searched.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Grep.OutputFile">
+            <summary>
+            Specifies the name of the output file.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Grep.Pattern">
+            <summary>
+            Specifies the regular-expression to search for.
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.UpdateItemMetadata">
+            <summary>
+            Adds or updates metadata to an item.
+            </summary>
+            <example>
+            <para>Updates the existing AdditionalProperties metadata to include the value
+            "SecondTest=No".</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <Files Include="MSBuildContrib.Common.Tasks.dll">
+                  <AdditionalProperties>TestFile=True</AdditionalProperties>
+               </Files>
+            </ItemGroup>
+            <UpdateItemMetadata Items="@(Files)" MetadataName="AdditionalProperties" Metadata="SecondTest=No">
+               <Output TaskParameter="ResultItems" ItemName="UpdatedItems" />
+            </UpdateItemMetadata>
+                ]]>
+              </code>
+            </example>
+            <example>
+            <para>Adds an additional metadata field named "SecondTest" whose value is "No".</para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <Files Include="MSBuildContrib.Common.Tasks.dll">
+                  <AdditionalProperties>TestFile=True</AdditionalProperties>
+               </Files>
+            </ItemGroup>
+            <UpdateItemMetadata Items="@(Files)" Metadata="SecondTest=No">
+               <Output TaskParameter="ResultItems" ItemName="UpdatedItems" />
+            </UpdateItemMetadata>
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.UpdateItemMetadata.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.CreateItemRegex"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.UpdateItemMetadata.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.UpdateItemMetadata.Items">
+            <summary>
+            Source items that will have extra metadata attached to it
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.UpdateItemMetadata.Metadata">
+            <summary>
+            The key/value pair of metadata to be applied to the items.
+            </summary>
+            <remarks>If <see cref="P:MSBuildContrib.Tasks.UpdateItemMetadata.MetadataName"/> is not provided, a new metadata item will be
+            created for each key/value pair. If <see cref="P:MSBuildContrib.Tasks.UpdateItemMetadata.MetadataName"/> is provided, a new
+            metadata item will be created (or an existing one updated) with the values provided.
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.UpdateItemMetadata.MetadataName">
+            <summary>
+            The name of an existing metadata field whose value should be updated to include
+            the values specified in <see cref="P:MSBuildContrib.Tasks.UpdateItemMetadata.Metadata"/>.
+            </summary>
+            <remarks>If the name does not exist, a new metadata item will be created.</remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.UpdateItemMetadata.ResultItems">
+            <summary>
+            Gets the result items.
+            </summary>
+            <value>The result items.</value>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.FxCop">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.FxCop.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.FxCop"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.FxCop.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.FxCop.GenerateFullPathToTool">
+            <summary>
+            Returns the fully qualified path to the executable file.
+            </summary>
+            <returns>The fully qualified path to the executable file.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.FxCop.GenerateResponseFileCommands">
+            <summary>
+            Returns a string value containing the command line arguments to add to the response (.rsp) file before running the executable file.
+            </summary>
+            <returns>A <see cref="T:System.String"/> value containing the command line arguments to add to the response (.rsp) file before running the executable file.</returns>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.FxCop.HandleTaskExecutionErrors">
+            <summary>
+            Handles execution errors raised by the executable file.
+            </summary>
+            <returns><see langword="true"/> if the method runs successfully; otherwise, <see langword="false"/>.</returns>
+            <remarks>This method is called only if the executable file returns a non-zero exit code.
+            The return value of this method is used as the return value of the task.
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.AlternativeToolName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.AnalysisTimeout">
+            <summary>
+            Modifies the deadlock timeout.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.ApplyLogFileXsl">
+            <summary>
+            Applies the XSL transformation that is specified in <see cref="P:MSBuildContrib.Tasks.FxCop.LogFileXsl"/> to the analysis report before saving the file.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.Assemblies">
+            <summary>
+            Specifies the target assemblies to analyze.
+            </summary>
+            <remarks>If you specify a directory, FxCopCmd tries to analyze all files
+            that have the .exe or .dll extension.</remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.ConsoleXsl">
+            <summary>
+            Specifies the XSL or XSLT file that contains a transformation to be applied to the 
+            analysis output before it is displayed on the console.
+            </summary>
+            <remarks>This option overrides the default XSL file applied to the analysis output.</remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.Culture">
+            <summary>
+            Customizes the language used by the IdentifiersShouldBeSpelledCorrectly and 
+            CompoundWordsShouldBeCasedCorrectly rules to determine the locale should be
+            used to spell check the identifiers.
+            </summary>
+            <remarks>
+            <para>The <see cref="P:MSBuildContrib.Tasks.FxCop.Culture"/> is used to indicate the language of your API identifiers; 
+            it is not, however, used to determine the language of your ResX-based resources, which use
+            the AssemblyCultureAttribute and the NeutralResourcesLanguageAttribute attributes.</para>
+            <para>AssemblyCultureAttribute is applied to satellitte assemblies and should never be 
+            placed on an assembly with code, whereas NeutralResourcesLanguageAttribute is applied
+            to an assembly with code to indicate the neutral culture of the assembly.</para>
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.DependentAssemblyPaths">
+            <summary>
+            Specifies additional directories to search for assembly dependencies.
+            </summary>
+            <remarks>The target assembly directory and the current working directory
+            are always searched.</remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.Dictionaries">
+            <summary>
+            Specifies custom dictionaries that should be used by the spelling rules
+            to prevent them from firing on rules that are not in the standard
+            dictionary, such as company and product names.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.FilesWritten">
+            <summary>
+            The files created by the code analysis.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.ForceOutput">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.GenerateSuccessFile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.IgnoreGeneratedCode">
+            <summary>
+            Do not analyze tool generated code.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.IgnoreInvalidTargets">
+            <summary>
+            Do not attempt to analyze invalid targets.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.Imports">
+            <summary>
+            Specifies the names of analysis reports or project files to import. Any messages
+            in the imported files that are marked as excluded are not included in the 
+            analysis results.
+            </summary>
+            <remarks>
+            If analysis results are saved to a project file by using the <see cref="P:MSBuildContrib.Tasks.FxCop.UpdateProject"/>
+            option, the imported messages are not saved.
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.LogFile">
+            <summary>
+            Specifies the file name for the analysis report.
+            </summary>
+            <remarks>
+            <para>If the file exists, it is overwritten without warning. If no items are
+            reported by the analysis and the file does not exist, it is not created.
+            If the file exists, it is deleted.</para>
+            <para>By default, the file includes an xml-style sheet processing instruction that
+            references FxCopReport.xsl. The file is saved in XML format unless
+            <see cref="P:MSBuildContrib.Tasks.FxCop.ApplyLogFileXsl"/> is specified.</para>
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.LogFileXsl">
+            <summary>
+            Specifies the XSL or XSLT file that contains a transformation to be applied to the 
+            analysis output.
+            </summary>
+            <remarks>This option overrides the default XSL file applied to the analysis output.</remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.OutputToBuildLog">
+            <summary>
+            Directs analysis output to the build log as build warnings or errors..
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.OutputToConsole">
+            <summary>
+            Directs analysis output to the console. By default, the XSL file
+            FxCopConsoleOutput.xsl is applied to the output before it is displayed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.OverrideRuleVisibilities">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.PlatformPath">
+            <summary>
+            Specifies the location of the version of Mscorlib.dll that was
+            used when the target assemblies were built, if this version is
+            not installed on the computer that is running the code analysis.
+            Typically, this option does not have to be set.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.Project">
+            <summary>
+            Specifies the file name of an FxCop project file.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.Quiet">
+            <summary>
+            Outputs verbose information during analysis.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.References">
+            <summary>
+            Specifies additional directories to search for assembly dependencies.
+            </summary>
+            <remarks>The target assembly directory and the current working directory
+            are always searched.</remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.RuleAssemblies">
+            <summary>
+            Specifies the location of rule libraries to load.
+            </summary>
+            <remarks> If you specify a directory, FxCopCmd will try
+            to load all files that have the .dll extension.
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.Rules">
+            <summary>
+            Specifies rules to include or suppress.
+            </summary>
+            <remarks>
+            <para>The rule must be in the format: Category#RuleID. For example, to suppress
+            rule CA1300 in the Microsoft.Globalization category the rule specified would be:
+            Microsoft.Globalization#CA1300.</para>
+            <para>To suppress the rule, precede the rule name with a minus (-).</para>
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.SaveMessagesToReport">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.SearchGlobalAssemblyCache">
+            <summary>
+            Search the Global Assembly Cache (GAC) for missing references.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.SuccessFile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.Summary">
+            <summary>
+            Include a summary report that has the informational messages returned by FxCopCmd.
+            </summary>
+            <remarks>The summary shows the number of items found, how many items were new, and the running time for the analysis.</remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.ToolName">
+            <summary>
+            Gets the name of the executable file to run.
+            </summary>
+            <value>The name of the executable file to run.</value>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.TreatWarningsAsErrors">
+            <summary>
+            Treat all Code Analysis warnings as build errors.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.FxCop.UpdateProject">
+            <summary>
+            Saves the results of the analysis in the project file.
+            </summary>
+            <remarks> This option is ignored if the <see cref="P:MSBuildContrib.Tasks.FxCop.Project"/> option is not specified.</remarks>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Match">
+            <summary>
+            Encapsulation of a match of a regular-expression with the
+            associated named capture-groups.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Match.WriteXml(System.Xml.XmlWriter)">
+            <summary>
+            Writes this match to an <see cref="T:System.Xml.XmlWriter"/>.
+            </summary>
+            <param name="xmlWriter">The <see cref="T:System.Xml.XmlWriter"/> to write to.</param>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Match.Item(System.String)">
+            <summary>
+            Gets or sets the value for a capture group.
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.Checksum">
+            <summary>
+            Calculates checksums for a set of files.
+            </summary>
+            <remarks>
+            This task takes a set of input files in a fileset
+            and calculates a checksum for each one of them. 
+            You can specify the algorithm to use when calculating
+            the checksum value (MD5 or SHA1, for example).
+            The calculated value is saved to a file with the same
+            name as the input file and an added extension either
+            based on the algorithm name (e.g. .MD5), or whatever 
+            is specified through the fileext a
+            </remarks>
+            <example>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <ChecksumFiles Include="**\*.dll" />
+            </ItemGroup>
+            <Checksum InputFiles="@(CodeStatsItems)" Algorithm="md5" Extension="MD5" />
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Checksum.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.Checksum"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.Checksum.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Checksum.Algorithm">
+            <summary>
+            The name of the algorithm to use when calculating the checksum.
+            </summary>
+            <remarks>Valid algorithms are MD5 or SHA1.
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Checksum.Extension">
+            <summary>
+            The generated checksum file's name will be the original filename
+            with "." and <see cref="P:MSBuildContrib.Tasks.Checksum.Extension"/> added to it.
+            </summary>
+            <remarks>The default is to use the name of the 
+            <see cref="P:MSBuildContrib.Tasks.Checksum.Algorithm"/>.
+            </remarks>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.Checksum.InputFiles">
+            <summary>
+            The set of files used to compute checksums.
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.CodeStats">
+            <summary>
+            Generates statistics from source code.
+            </summary>
+            <remarks>
+            Scans files in a fileset counting lines.
+            </remarks>
+            <example>
+              <para>
+              Generate statistics for a set of C# and VB.NET sources, applying 
+              different labels for both.
+              </para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <CodeStatsItems Include="**\*.cs">
+                  <Label>C#</Label>
+               </CodeStatItems>
+               <CodeStatsItems Include="**\*.vb">
+                  <Label>VB.NET</Label>
+               </CodeStatsItems>
+            </ItemGroup>
+            <Codestats InputFiles="@(CodeStatsItems)" OutputFile="test.xml" Append="true" BuildName="MyBuildName" />
+                ]]>
+              </code>
+            </example>
+            <example>
+              <para>
+              Generate statistics for all C# sources and only output a summary to 
+              the log.
+              </para>
+              <code lang="MSBuild">
+                <![CDATA[
+            <ItemGroup>
+               <CodeStatsItems Include="**\*.cs">
+                  <Label>C#</Label>
+               </CodeStatItems>
+            </ItemGroup>
+            <Codestats InputFiles="@(CodeStatsItems)" OutputFile="test.xml" Summarize="true" />
+                ]]>
+              </code>
+            </example>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.CodeStats.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuildContrib.Tasks.CodeStats"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.CodeStats.Execute">
+            <summary>
+            When overridden in a derived class, executes the task.
+            </summary>
+            <returns>Returns <see langword="true" /> if the task successfully
+            executed; otherwise, <see langword="false" />.
+            </returns>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CodeStats.Append">
+            <summary>
+            Specifies whether the results should be appended to the output file.
+            The default is <see langword="false" />.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CodeStats.BuildName">
+            <summary>
+            An identifier to be able to track which build last updated the 
+            code stats file.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CodeStats.InputFiles">
+            <summary>
+            The set of files which will be analyzed.
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CodeStats.OutputFile">
+            <summary>
+            The name of the file to save the output to (in XML).
+            </summary>
+        </member>
+        <member name="P:MSBuildContrib.Tasks.CodeStats.Summarize">
+            <summary>
+            If you only want to show summary stats for the whole fileset
+            </summary>
+        </member>
+        <member name="T:MSBuildContrib.Tasks.MatchCollection">
+            <summary>
+             A strongly-typed collection of <see cref="T:MSBuildContrib.Tasks.Match"/> instances.
+            </summary>
+        </member>
+        <member name="M:MSBuildContrib.Tasks.MatchCollection.Add(MSBuildContrib.Tasks.MatchCollection)">
+            <summary>
+            Adds all <see cref="T:MSBuildContrib.Tasks.Match"/> instances <paramref name="matches"/>
+            to this collection.
+            </summary>
+            <param name="matches">Collection of <see cref="T:MSBuildContrib.Tasks.Match"/> instances to add.</param>
+        </member>
+    </members>
+</doc>

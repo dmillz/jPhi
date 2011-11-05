@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+MSBuild file for combining/minifying javascript using the Google Closure Compiler application
+
+http://code.google.com/p/cc2vs/
+http://code.google.com/closure/compiler/docs/gettingstarted_app.html
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Note that the "Concat" task has been modified from it's original form in order
+		 to accept an optional "OutputEncoding" parameter -->
+	<UsingTask
+        TaskName="Concat"
+        AssemblyFile="..\tools\MSBuildContrib_1.0.2946.8801.modified\MSBuildContrib.Tasks.dll" />
+		
+	<Target Name="Build" DependsOnTargets="ClosureErrors;JSLint">
+	
+		<!-- create the output directory if it doesn't exist-->
+		<MakeDir Directories="$(OutputDirectory)" Condition="!Exists('$(OutputDirectory)')"/>	
+		<MakeDir Directories="$(UnitTestsOutputDirectory)" Condition="!Exists('$(UnitTestsOutputDirectory)')"/>			
+
+		<ItemGroup>
+			<!-- all javascript files in all directories under /tests/ -->
+			<UnitTestFiles Include="$(TestsDirectory)\**\*.js" />
+        </ItemGroup>
+		
+		<ItemGroup>
+			<!-- all javascript files in all directories under /lib -->
+			<LibFiles Include="$(LibDirectory)\**\*.js" />
+        </ItemGroup>
+		
+		<!-- MAIN DISTRIBUTION -->
+		<!-- output a combined, but not minified, file -->
+		<Concat InputFiles="@(JavaScriptFiles)" Destination="$(NonMinifiedOutputFile)" Append="false" />
+		
+		<!-- output the combined and minified file -->
+		<CallTarget Targets="ClosureCompile"/>
+		
+		<!-- UNIT TESTS -->
+		<!-- output a combined, but not minified, file full of unit tests -->
+		<Concat InputFiles="@(UnitTestFiles)" Destination="$(UnitTestsOutputFile)" Append="false" />
+		
+		<!-- copy testing dependencies to the unit tests output directory -->
+		<Copy SourceFiles="$(MinifiedOutputFile)" DestinationFolder="$(UnitTestsOutputDirectory)" />
+		<Copy SourceFiles="@(LibFiles)" DestinationFolder="$(UnitTestsOutputDirectory)" />		
+
+		
+    </Target> 
+	
+</Project>
