@@ -2,3 +2,4 @@
 _ReSharper.jPhi
 bin
 config/environment.properties
+*.user
