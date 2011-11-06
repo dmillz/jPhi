@@ -1,50 +1,53 @@
 ﻿(function ($) {
 
-	// the golden ratio
+	// The golden ratio
 	var PHI = (1 + Math.sqrt(5)) / 2;
 
-	// how to align the inner rectangles
-	var alignments = {
-		top: {
-			alsoAlign: "left",
-			margin: 0
-		},
-		right: {
-			alsoAlign: "top",
-			margin: 0
-		},
-		bottom: {
-			alsoAlign: "right",
-			margin: 0
-		},
-		left: {
-			alsoAlign: "bottom",
-			margin: 0
-		}
-	};
+	// Utility functions
 
-	var alignOrder = ["top", "right", "bottom", "left"];
+	function adjustForOuterSize($element) {
+		var wdiff = $element.outerWidth() - $element.width();
+		var hdiff = $element.outerHeight() - $element.height();
+		$element.width($element.width() - wdiff);
+		$element.height($element.height() - hdiff);
+	}
 
-	$.fn.phi = function (content) {
+	// Plug it in
+	$.fn.phi = function (content, options) {
+
+		// Keep track of where to draw the next retangle
+		var _alignments = {
+			top: 0,
+			right: 0,
+			bottom: 0,
+			left: 0
+		};
+
+		// Default settings
+		var settings = {
+			alignOrder: ["top", "right", "bottom", "left"],
+			cssClasses: ["yellow", "purple", "orange", "blue", "red", "grayish-yellow", "medium-gray"]
+		};
 
 		return this.each(function () {
 
-			var $container = $(this);
-			$container.css("position", "relative");
+			// Apply user settings
+			if (options) {
+				$.extend(settings, options);
+			}
 
-			// remove any elements from the container
-			$container.empty();
+			var $container = $(this);
 
 			// fill as much of the container as possible
 			var width = $(this).width();
 			var height = $(this).height();
 
-			// resize the outermost rectangle to fit the golden ratio
+			// size the outermost rectangle to fit the golden ratio
 			if (width / height > PHI) {
-				width = height * PHI;
+				width = Math.round(height * PHI);
 			}
 			else if (width / height < PHI) {
-				height = width / PHI;
+				height = Math.round(width / PHI);
 			}
 
 			// create the outermost rectangle
@@ -57,36 +60,40 @@
 				.height(height)
 				.appendTo($container);
 
+			// adjust for borders, padding, and margins
+			adjustForOuterSize($outer);
+
+			var previousAlign = null;
+			var color = 0;
+
 			// Draw one square for each piece of content.
 			// Except for the last piece, for which we'll draw a whole rectangle
 			for (var i = 0; i < content.length; i++) {
 
-				var alignmentName = alignOrder[i % alignOrder.length];
-				var alignment = alignments[alignmentName];
+				var alignmentName = settings.alignOrder[i % settings.alignOrder.length];
+				var alignment = _alignments[alignmentName];
+				if (!previousAlign) {
+					previousAlign = settings.alignOrder[settings.alignOrder.length - 1];
+				}
 
 				var availableSpace = i % 2 === 0 ? width : height;
 
 				// length of the edge of the next square
-				var length = availableSpace / PHI;
+				var length = Math.round(availableSpace / PHI);
 
 				// create the next square
 				var $rect = $("<div/>")
 					.append(content[i])
 					.css("position", "absolute")
-					.css(alignmentName, alignment.margin + "px")
-					.css(alignment.alsoAlign, alignments[alignment.alsoAlign].margin)
+					.css(alignmentName, alignment + "px")
+					.css(previousAlign, _alignments[previousAlign])
+					.addClass(settings.cssClasses[color % settings.cssClasses.length])
 					.width(length)
 					.height(length)
 					.appendTo($outer);
 
-				// adjust for borders and padding
-				var contentWidth = $(content[i]).outerWidth();
-				var contentHeight = $(content[i]).outerHeight();
-				var wdiff = contentWidth - length;
-				var hdiff = contentHeight - length;
-				$rect.width(length - wdiff);
-				$rect.height(length - hdiff);
-
+				// adjust for borders, padding, and margins
+				adjustForOuterSize($rect);
 
 				// update the parameters for the next iteration
 				if (i % 2 == 0) {
@@ -95,7 +102,9 @@
 				else {
 					height -= length;
 				}
-				alignments[alignment.alsoAlign].margin += length;
+				_alignments[previousAlign] += length;
+				color++;
+				previousAlign = alignmentName;
 			}
 		});
 
