@@ -28,9 +28,9 @@
 	function repositionSide($element, side) {
 
 		if (hasPosition($element, side)) {
-			console.log("has " + side);
+			//	console.log("has " + side);
 			var outer = outerSize($element, side);
-			console.log("adjusting " + side + ": " + outer);
+			//console.log("adjusting " + side + ": " + outer);
 			$element.css(side, cssValue($element, side) + outer + "px");
 		}
 	}
@@ -38,7 +38,7 @@
 	/**
 	* Adjusts the size and position of the element to account for padding,
 	* borders, and margin, which aren't normally accounted for
-	* when laying-out elements.
+	* when sizing elements.
 	*/
 	function adjustForOuterSize($element) {
 		var wdiff = $element.outerWidth(true) - $element.width();
@@ -48,26 +48,20 @@
 
 		console.log("adjusted for wdiff " + wdiff + " and hdiff " + hdiff);
 
-		for (var i = 0; i < defaults.alignOrder.length; i++) {
-			repositionSide($element, defaults.alignOrder[i]);
-		}
+		//		for (var i = 0; i < defaults.alignOrder.length; i++) {
+		//			repositionSide($element, defaults.alignOrder[i]);
+		//		}
 	}
 
 	// Plug it in
 	$.fn.phi = function (content, options) {
 
-		// Keep track of where to draw the next retangle
-		var _alignments = {
-			top: 0,
-			right: 0,
-			bottom: 0,
-			left: 0
-		};
-
 		// Default settings
 		var settings = {
 			alignOrder: defaults.alignOrder.slice(),
-			cssClasses: ["yellow", "purple", "orange", "blue", "red", "grayish-yellow", "medium-gray"]
+			cssClasses: ["yellow", "purple", "orange", "blue", "red", "grayish-yellow", "medium-gray"],
+			drawRectangleLast: true,
+			autoResize: true
 		};
 
 		// Apply user settings
@@ -75,13 +69,12 @@
 			$.extend(settings, options);
 		}
 
-		return this.each(function () {
-
-			var $container = $(this);
+		// The guts
+		function phiify($container) {
 
 			// fill as much of the container as possible
-			var width = $(this).width();
-			var height = $(this).height();
+			var width = $container.width();
+			var height = $container.height();
 
 			// size the outermost rectangle to fit the golden ratio
 			if (width / height > PHI) {
@@ -104,6 +97,13 @@
 			// adjust for borders, padding, and margins
 			adjustForOuterSize($outer);
 
+			// Keep track of where to draw the next retangle
+			var alignments = {
+				top: 0,
+				right: 0,
+				bottom: 0,
+				left: 0
+			};
 			var previousAlign = null;
 			var color = 0;
 
@@ -112,7 +112,7 @@
 			for (var i = 0; i < content.length; i++) {
 
 				var alignmentName = settings.alignOrder[i % settings.alignOrder.length];
-				var alignment = _alignments[alignmentName];
+				var alignment = alignments[alignmentName];
 				if (!previousAlign) {
 					previousAlign = settings.alignOrder[settings.alignOrder.length - 1];
 				}
@@ -121,21 +121,30 @@
 
 				// length of the edge of the next square
 				var length = Math.round(availableSpace / PHI);
+				var w = length;
+				var h = length;
+
+				// extend either the width or height on the last iteration, depending on the orientation
+				// to draw a full rectangle in the final position
+				if (i === content.length - 1 && settings.drawRectangleLast) {
+					w = i % 2 === 0 ? availableSpace : length;
+					h = i % 2 !== 0 ? availableSpace : length;
+				}
 
 				// create the next square
 				var $rect = $("<div/>")
 					.append(content[i])
 					.css("position", "absolute")
 					.css(alignmentName, alignment + "px")
-					.css(previousAlign, _alignments[previousAlign])
+					.css(previousAlign, alignments[previousAlign])
 					.addClass(settings.cssClasses[color % settings.cssClasses.length])
-					.width(length)
-					.height(length)
+					.width(w)
+					.height(h)
 					.appendTo($outer);
 
 				// adjust for borders, padding, and margins
 				adjustForOuterSize($(content[i]));
-
+				
 				// update the parameters for the next iteration
 				if (i % 2 == 0) {
 					width -= length;
@@ -143,9 +152,26 @@
 				else {
 					height -= length;
 				}
-				_alignments[previousAlign] += length;
+				alignments[previousAlign] += length;
 				color++;
 				previousAlign = alignmentName;
+			}
+		}
+
+		// Enable chaining
+		return this.each(function () {
+
+			// Run jPhi on each container
+			phiify($(this));
+
+			// Dynamically resize
+			if (settings.autoResize) {
+				var $self = $(this);
+				$(window).resize(function () {
+
+					$self.empty();
+					phiify($self);
+				});
 			}
 		});
 

@@ -60,9 +60,10 @@
   </ProjectExtensions>
   <ItemGroup>
     <Content Include="lib\jquery-1.6.4.js" />
+    <Content Include="lib\jquery.dimensions.etc.js" />
     <Content Include="lib\jquery.simulate.js" />
     <Content Include="source\jquery.phi.js" />
-    <Content Include="source\test.html" />
+    <Content Include="source\jphi-demo.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
