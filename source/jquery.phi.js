@@ -3,13 +3,54 @@
 	// The golden ratio
 	var PHI = (1 + Math.sqrt(5)) / 2;
 
-	// Utility functions
+	// defaults
+	var defaults = {
+		alignOrder: ["top", "right", "bottom", "left"]
+	};
 
+	//// Utility functions ////
+
+	function cssValue($element, styleName) {
+		return parseInt($element.css(styleName), 10);
+	}
+
+	function outerSize($element, side) {
+		return cssValue($element, "margin-" + side) +
+				cssValue($element, "border-" + side + "-width") +
+				cssValue($element, "padding-" + side);
+	}
+
+	function hasPosition($element, side) {
+		// TODO: Better way to detect?
+		return $element.attr("style").match(side);
+	}
+
+	function repositionSide($element, side) {
+
+		if (hasPosition($element, side)) {
+			console.log("has " + side);
+			var outer = outerSize($element, side);
+			console.log("adjusting " + side + ": " + outer);
+			$element.css(side, cssValue($element, side) + outer + "px");
+		}
+	}
+
+	/**
+	* Adjusts the size and position of the element to account for padding,
+	* borders, and margin, which aren't normally accounted for
+	* when laying-out elements.
+	*/
 	function adjustForOuterSize($element) {
-		var wdiff = $element.outerWidth() - $element.width();
-		var hdiff = $element.outerHeight() - $element.height();
+		var wdiff = $element.outerWidth(true) - $element.width();
+		var hdiff = $element.outerHeight(true) - $element.height();
 		$element.width($element.width() - wdiff);
 		$element.height($element.height() - hdiff);
+
+		console.log("adjusted for wdiff " + wdiff + " and hdiff " + hdiff);
+
+		for (var i = 0; i < defaults.alignOrder.length; i++) {
+			repositionSide($element, defaults.alignOrder[i]);
+		}
 	}
 
 	// Plug it in
@@ -25,16 +66,16 @@
 
 		// Default settings
 		var settings = {
-			alignOrder: ["top", "right", "bottom", "left"],
+			alignOrder: defaults.alignOrder.slice(),
 			cssClasses: ["yellow", "purple", "orange", "blue", "red", "grayish-yellow", "medium-gray"]
 		};
 
-		return this.each(function () {
+		// Apply user settings
+		if (options) {
+			$.extend(settings, options);
+		}
 
-			// Apply user settings
-			if (options) {
-				$.extend(settings, options);
-			}
+		return this.each(function () {
 
 			var $container = $(this);
 
@@ -93,7 +134,7 @@
 					.appendTo($outer);
 
 				// adjust for borders, padding, and margins
-				adjustForOuterSize($rect);
+				adjustForOuterSize($(content[i]));
 
 				// update the parameters for the next iteration
 				if (i % 2 == 0) {
